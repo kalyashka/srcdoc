@@ -1,0 +1,12 @@
+#!/usr/bin/env php
+<?php
+require 'vendor/autoload.php';
+
+use Kalyashka\Srcdoc\Command\SourceCommand;
+use Symfony\Component\Console\Application;
+
+$command = new SourceCommand();
+$app     = new Application('srcdoc', '0.1.0');
+$app->add($command);
+$app->setDefaultCommand($command->getName(), true);
+$app->run();

@@ -14,7 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SourceCommand extends Command
 {
-    const STYLES_DIR = '../../vendor/scrivo/highlight.php/styles';
+    const STYLES_DIR = 'vendor/scrivo/highlight.php/styles';
 
     /**
      * SourceCommand constructor.
@@ -56,7 +56,7 @@ class SourceCommand extends Command
         if ($themeList) {
             return $this->themeList($input, $output);
         }
-        $themeFile = __DIR__ . '/' . self::STYLES_DIR . '/' . $theme . '.css';
+        $themeFile = $this->getStylesDir() . '/' . $theme . '.css';
         if (!file_exists($themeFile)) {
             $errOutput->writeln('<error>Style file not found</error>');
 
@@ -104,7 +104,7 @@ class SourceCommand extends Command
     {
         $styles = array_map(function ($f) {
             return pathinfo($f, PATHINFO_FILENAME);
-        }, glob(__DIR__ . '/' . self::STYLES_DIR . '/*.css'));
+        }, glob($this->getStylesDir() . '/*.css'));
         $output->writeln('<info>Available styles:</info>');
 
         $columns = 4;
@@ -126,4 +126,12 @@ class SourceCommand extends Command
         return is_string($value) ? preg_split('/[,; ]+/', $value) : (array)$value;
     }
 
+    protected function getStylesDir()
+    {
+        if (is_dir(__DIR__ . '/../../' . self::STYLES_DIR)) {
+            return __DIR__ . '/../../' . self::STYLES_DIR;
+        } else {
+            return __DIR__ . '/../../../../../' . self::STYLES_DIR;
+        }
+    }
 }
